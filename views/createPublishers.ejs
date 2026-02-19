@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/createPublishersStyle.css">
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="nav-brand">📚 Biblioteca</a>
+        <ul class="nav-links">
+            <li><a href="/createAuthors">Autores</a></li>
+            <li><a href="/createPublishers">Editoriales</a></li>
+            <li><a href="/booksList">Crear Libro</a></li>
+            <li><a href="/createCategories">Categorías</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+
+        <div class="page-header">
+            <p class="page-label">Gestión</p>
+            <h1>Editoriales <span>Registradas</span></h1>
+        </div>
+
+
+        <div class="table-section">
+            <h2>Lista de editoriales</h2>
+        
+            <div class="table-wrap">
+                <% if (!publisher || publisher.length === 0) { %>
+                    <p class="empty-row">No hay editoriales registradas aún.</p>
+                <% } else { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Fundación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <% publisher.forEach(pub => { %>
+                                <tr data-search="<%= pub.name.toLowerCase() %>">
+                                    <td><%= pub.name %></td>
+                                    <td>
+                                        <% if (pub.founding_date) { %>
+                                            <%= new Date(pub.founding_date).toISOString().split('T')[0] %>
+                                        <% } else { %>
+                                            N/A
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <div class="td-actions">
+                                            <a href="/publishers/<%= pub.id %>/edit" class="btn-edit">✏️ Editar</a>
+
+                                            <form   id="delete-pub-<%= pub.id %>" action="/publishers/<%= pub.id %>/delete" method="POST" style="display:inline;">
+                                                <button type="button" onclick="confirmarAccion('delete-pub-<%= pub.id %>')" class="btn-delete">🗑 Borrar</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        </div>
+
+
+        <div class="form-section">
+            <h2>Nueva editorial</h2>
+            <div class="form-card">
+
+                <% if (errors && errors.length > 0) { %>
+                    <ul class="errors">
+                        <% errors.forEach(error => { %>
+                            <li><%= error.msg %></li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+
+                <form action="/createPublishers" method="POST">
+                    <div class="field">
+                        <label for="name">Nombre de la editorial</label>
+                        <input type="text" name="name" id="name" placeholder="Ej: Editorial Planeta" required>
+                    </div>
+                    <div class="field">
+                        <label for="founding_date">Fecha de fundación</label>
+                        <input type="date" name="founding_date" id="founding_date" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Crear Editorial</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+          function confirmarAccion(formId) {
+    const password = prompt("Ingresa la contraseña de administrador:");
+    if (password === null) return; // canceló
+    
+    const form = document.getElementById(formId);
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "password";
+    input.value = password;
+    form.appendChild(input);
+    form.submit();
+}
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/indexStyle.css">
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="nav-brand">📚 Biblioteca</a>
+        <ul class="nav-links">
+            <li><a href="/createAuthors">Autores</a></li>
+            <li><a href="/createPublishers">Editoriales</a></li>
+            <li><a href="/booksList">Crear Libro</a></li>
+            <li><a href="/createCategories">Categorías</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero">
+        <p class="hero-label">Catálogo</p>
+        <h1>Tu <span>Biblioteca</span><br>Personal</h1>
+        <p class="hero-sub"><%= books.length %> libro<%= books.length !== 1 ? 's' : '' %> en la colección</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="search-bar-wrap">
+        <input type="text" id="searchBooks" placeholder="Buscar por título, autor, editorial..." oninput="filterBooks()">
+    </div>
+
+    <div class="books-grid" id="booksGrid">
+        <% if (books.length === 0) { %>
+            <div class="empty">
+                <div class="empty-icon">📖</div>
+                <h2>Sin libros aún</h2>
+                <p>Empieza agregando tu primer libro a la colección.</p>
+                <a href="/booksList">Agregar libro</a>
+            </div>
+        <% } else { %>
+            <% books.forEach((book, i) => { %>
+                <div class="book-card" data-search="<%= (book.book_name + ' ' + book.authors + ' ' + book.publisher_name).toLowerCase() %>">
+                    <div class="book-number">Nº <%= String(i + 1).padStart(2, '0') %></div>
+                    <div class="book-title"><%= book.book_name %></div>
+                    <div class="book-meta">
+                        <div class="meta-row">
+                            <span class="meta-label">Autor</span>
+                            <span class="meta-value accent"><%= book.authors %></span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">Editorial</span>
+                            <span class="meta-value"><%= book.publisher_name %></span>
+                        </div>
+                        <div class="meta-row">
+                            <span class="meta-label">Año</span>
+                            <span class="meta-value"><%= book.release_year || 'N/A' %></span>
+                        </div>
+                    </div>
+                    <% if (book.categories) { %>
+                        <div class="tags">
+                            <% book.categories.split(', ').forEach(cat => { %>
+                                <span class="tag"><%= cat.trim() %></span>
+                            <% }) %>
+                        </div>
+                    <% } %>
+                    <div class="card-actions">
+              <a href="/<%= book.book_id %>/edit" class="btn-edit">✏️ Editar</a>
+
+         <form id="delete-<%= book.book_id %>" action="/<%= book.book_id %>/delete" method="POST">
+        <button type="button" onclick="confirmarAccion('delete-<%= book.book_id %>')" class="btn-delete">🗑 Borrar</button>
+        </form>
+                    </div>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+
+    <script>
+        function filterBooks() {
+            const query = document.getElementById('searchBooks').value.toLowerCase();
+            document.querySelectorAll('.book-card').forEach(card => {
+                const text = card.dataset.search || '';
+                card.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function confirmarAccion(formId) {
+    const password = prompt("Ingresa la contraseña de administrador:");
+    if (password === null) return; // canceló
+    
+    const form = document.getElementById(formId);
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "password";
+    input.value = password;
+    form.appendChild(input);
+    form.submit();
+}
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/createPublishersStyle.css">
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="nav-brand">📚 Biblioteca</a>
+        <ul class="nav-links">
+            <li><a href="/createAuthors">Autores</a></li>
+            <li><a href="/createPublishers">Editoriales</a></li>
+            <li><a href="/booksList">Crear Libro</a></li>
+            <li><a href="/createCategories">Categorías</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+
+        <div class="page-header">
+            <p class="page-label">Gestión</p>
+            <h1>Autores <span>Registrados</span></h1>
+        </div>
+
+
+        <div class="table-section">
+            <h2>Lista de autores</h2>
+           
+            <div class="table-wrap">
+                <% if (!authors || authors.length === 0) { %>
+                    <p class="empty-row">No hay autores registrados aún.</p>
+                <% } else { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Nacimiento</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <% authors.forEach(author => { %>
+                                <tr data-search="<%= author.name.toLowerCase() %>">
+                                    <td><%= author.name %></td>
+                                    <td>
+                                        <% if (author.birth_date) { %>
+                                            <%= new Date(author.birth_date).toISOString().split('T')[0] %>
+                                        <% } else { %>
+                                            N/A
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <div class="td-actions">
+                                          <a href="/authors/<%= author.id %>/edit" class="btn-edit">✏️ Editar</a>
+
+                                          <form id="delete-author-<%= author.id %>" action="/authors/<%= author.id %>/delete" method="POST">
+                                          <button type="button" onclick="confirmarAccion('delete-author-<%= author.id %>')" class="btn-delete">🗑 Borrar</button>
+                                          </form>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        </div>
+
+
+        <div class="form-section">
+            <h2>Nuevo autor</h2>
+            <div class="form-card">
+
+                <% if (errors && errors.length > 0) { %>
+                    <ul class="errors">
+                        <% errors.forEach(error => { %>
+                            <li><%= error.msg %></li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+
+                <form action="/createAuthors" method="POST">
+                    <div class="field">
+                        <label for="name">Nombre del autor</label>
+                        <input type="text" name="name" id="name" placeholder="Ej: Gabriel García Márquez" required>
+                    </div>
+                    <div class="field">
+                        <label for="birth_date">Fecha de nacimiento</label>
+                        <input type="date" name="birth_date" id="birth_date" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Crear Autor</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    
+        function confirmarAccion(formId) {
+    const password = prompt("Ingresa la contraseña de administrador:");
+    if (password === null) return; 
+    
+    const form = document.getElementById(formId);
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "password";
+    input.value = password;
+    form.appendChild(input);
+    form.submit();
+}
+    </script>
+
+</body>
+</html>

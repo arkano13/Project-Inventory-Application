@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/createPublishersStyle.css">
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="nav-brand">📚 Biblioteca</a>
+        <ul class="nav-links">
+            <li><a href="/createAuthors">Autores</a></li>
+            <li><a href="/createPublishers">Editoriales</a></li>
+            <li><a href="/booksList">Crear Libro</a></li>
+            <li><a href="/createCategories">Categorías</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+
+        <div class="page-header">
+            <p class="page-label">Gestión</p>
+            <h1>Categorías <span>Registradas</span></h1>
+        </div>
+
+        <div class="table-section">
+            <h2>Lista de categorías</h2>
+    
+            <div class="table-wrap">
+                <% if (!categories || categories.length === 0) { %>
+                    <p class="empty-row">No hay categorías registradas aún.</p>
+                <% } else { %>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <% categories.forEach(cat => { %>
+                                <tr data-search="<%= cat.name.toLowerCase() %>">
+                                    <td><%= cat.name %></td>
+                                    <td>
+                                        <div class="td-actions">
+                                            <a href="/categories/<%= cat.id %>/edit" class="btn-edit">✏️ Editar</a>
+
+
+                                          <form id="delete-cat-<%= cat.id %>" action="/categories/<%= cat.id %>/delete" method="POST">
+                                             <button type="button" onclick="confirmarAccion('delete-cat-<%= cat.id %>')" class="btn-delete">🗑 Borrar</button>
+                                          </form>
+
+
+                                         
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        </div>
+
+
+        <div class="form-section">
+            <h2>Nueva categoría</h2>
+            <div class="form-card">
+
+                <% if (errors && errors.length > 0) { %>
+                    <ul class="errors">
+                        <% errors.forEach(error => { %>
+                            <li><%= error.msg %></li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+
+                <form action="/createCategories" method="POST">
+                    <div class="field">
+                        <label for="name">Nombre de la categoría</label>
+                        <input type="text" name="name" id="name" placeholder="Ej: Ciencia Ficción" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Crear Categoría</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+         function confirmarAccion(formId) {
+    const password = prompt("Ingresa la contraseña de administrador:");
+    if (password === null) return; 
+    
+    const form = document.getElementById(formId);
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "password";
+    input.value = password;
+    form.appendChild(input);
+    form.submit();
+}
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/booksListStyle.css">
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="nav-brand">📚 Biblioteca</a>
+        <ul class="nav-links">
+            <li><a href="/createAuthors">Autores</a></li>
+            <li><a href="/createPublishers">Editoriales</a></li>
+            <li><a href="/booksList">Crear Libro</a></li>
+            <li><a href="/createCategories">Categorías</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+        <p class="page-label">Nuevo registro</p>
+        <h1>Agregar <span>Libro</span></h1>
+
+        <div class="form-card">
+            <form action="/booksList" method="POST">
+
+                <div class="field">
+                    <label for="name">Título del libro</label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        id="name" 
+                        placeholder="Ej: Game of Thrones" 
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="author_id">Autor</label>
+                    <select name="author_id" id="author_id" required>
+                        <option value="">— Selecciona un autor —</option>
+                        <% authors.forEach(author => { %>
+                            <option value="<%= author.id %>"><%= author.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="publisher_id">Editorial</label>
+                    <select name="publisher_id" id="publisher_id" required>
+                        <option value="">— Selecciona una editorial —</option>
+                        <% publisher.forEach(pub => { %>
+                            <option value="<%= pub.id %>"><%= pub.name %></option>
+                        <% }) %>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <fieldset>
+                        <legend>Categorías</legend>
+                        <div class="checkbox-grid">
+                            <% categories.forEach(cat => { %>
+                                <div class="checkbox-item">
+                                    <input 
+                                        type="checkbox" 
+                                        name="category_ids" 
+                                        value="<%= cat.id %>" 
+                                        id="cat_<%= cat.id %>"
+                                    >
+                                    <label for="cat_<%= cat.id %>"><%= cat.name %></label>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="field">
+                    <label for="release_date">Fecha de publicación</label>
+                    <input 
+                        type="date" 
+                        name="release_date" 
+                        id="release_date" 
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn-submit">Crear Libro</button>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

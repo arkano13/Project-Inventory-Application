@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/booksListStyle.css">
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="nav-brand">📚 Biblioteca</a>
+        <ul class="nav-links">
+            <li><a href="/createAuthors">Autores</a></li>
+            <li><a href="/createPublishers">Editoriales</a></li>
+            <li><a href="/booksList">Crear Libro</a></li>
+            <li><a href="/createCategories">Categorías</a></li>
+        </ul>
+    </nav>
+
+    <div class="page">
+        <p class="page-label">Editando registro</p>
+        <h1>Editar <span>Editorial</span></h1>
+
+        <div class="form-card">
+            <form action="/publishers/<%= pub.id %>/edit" method="POST">
+
+                <div class="field">
+                    <label for="name">Nombre de la editorial</label>
+                    <input type="text" name="name" id="name" value="<%= pub.name %>" required>
+                </div>
+
+                <div class="field">
+                    <label for="founding_date">Fecha de fundación</label>
+                    <input type="date" name="founding_date" id="founding_date" value="<%= new Date(pub.founding_date).toISOString().split('T')[0] %>" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Guardar Cambios</button>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
