@@ -1,4 +1,4 @@
-const pool = require("../../Ejemplo2/db/pool");
+const pool = require("../db/pool");
 
 async function getAllbooks() {
   try {
