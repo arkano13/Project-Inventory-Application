@@ -13,7 +13,7 @@ app.use(express.static(assetsPath));
 
 app.use("/", router);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;;
 app.listen(PORT, (error) => {
   if (error) {
     console.log("Error starting server:", error);
