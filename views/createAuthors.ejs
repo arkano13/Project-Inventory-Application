@@ -58,7 +58,7 @@
                                           <a href="/authors/<%= author.id %>/edit" class="btn-edit">✏️ Editar</a>
 
                                           <form id="delete-author-<%= author.id %>" action="/authors/<%= author.id %>/delete" method="POST">
-                                          <button type="button" onclick="confirmarAccion('delete-author-<%= author.id %>')" class="btn-delete">🗑 Borrar</button>
+                                       <button type="button" onclick="confirmarAccion('delete-author-<%= author.id %>', '<%= author.id %>', 'author')" class="btn-delete">🗑 Borrar</button>
                                           </form>
 
                                         </div>
@@ -102,17 +102,21 @@
 
     <script>
     
-        function confirmarAccion(formId) {
-    const password = prompt("Ingresa la contraseña de administrador:");
-    if (password === null) return; 
-    
-    const form = document.getElementById(formId);
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "password";
-    input.value = password;
-    form.appendChild(input);
-    form.submit();
+async function confirmarAccion(formId, bookId) {
+  const password = prompt("Ingresa la contraseña de administrador:");
+  if (password === null) return;
+
+  const response = await fetch(`/${bookId}/delete`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password })
+  });
+
+  if (response.ok) {
+    window.location.href = "/";
+  } else {
+    alert("Contraseña incorrecta ❌");
+  }
 }
     </script>
 

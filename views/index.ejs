@@ -9,6 +9,10 @@
 </head>
 <body>
 
+<% if (locals.error) { %>
+  <p style="color: red;"><%= error %></p>
+<% } %>
+
     <nav>
         <a href="/" class="nav-brand">📚 Biblioteca</a>
         <ul class="nav-links">
@@ -69,7 +73,7 @@
               <a href="/<%= book.book_id %>/edit" class="btn-edit">✏️ Editar</a>
 
          <form id="delete-<%= book.book_id %>" action="/<%= book.book_id %>/delete" method="POST">
-        <button type="button" onclick="confirmarAccion('delete-<%= book.book_id %>')" class="btn-delete">🗑 Borrar</button>
+      <button type="button" onclick="confirmarAccion('delete-<%= book.book_id %>', '<%= book.book_id %>')" class="btn-delete">🗑 Borrar</button>
         </form>
                     </div>
                 </div>
@@ -86,17 +90,21 @@
             });
         }
 
-        function confirmarAccion(formId) {
-    const password = prompt("Ingresa la contraseña de administrador:");
-    if (password === null) return; // canceló
-    
-    const form = document.getElementById(formId);
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "password";
-    input.value = password;
-    form.appendChild(input);
-    form.submit();
+async function confirmarAccion(formId, bookId) {
+  const password = prompt("Ingresa la contraseña de administrador:");
+  if (password === null) return;
+
+  const response = await fetch(`/${bookId}/delete`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password })
+  });
+
+  if (response.ok) {
+    window.location.href = "/";
+  } else {
+    alert("Contraseña incorrecta ❌");
+  }
 }
 
     </script>

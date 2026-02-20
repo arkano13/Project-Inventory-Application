@@ -315,9 +315,9 @@ exports.categoryEditPost = async (req, res) => {
 exports.bookDeletePost = async (req, res) => {
   try {
     const { password } = req.body;
-    if (password !== process.env.ADMIN_PASSWORD) {
-      return res.status(403).send("Contraseña incorrecta");
-    }
+  if (password !== process.env.ADMIN_PASSWORD) {
+  return res.status(403).json({ error: "Contraseña incorrecta" });
+}
     await db.deleteBook(req.params.id);
     res.redirect("/");
   } catch (err) {
@@ -329,9 +329,9 @@ exports.bookDeletePost = async (req, res) => {
 exports.authorsDeletePost = async (req, res) => {
   try {
     const { password } = req.body;
-    if (password !== process.env.ADMIN_PASSWORD) {
-      return res.status(403).send("Contraseña incorrecta");
-    }
+   if (password !== process.env.ADMIN_PASSWORD) {
+  return res.status(403).json({ error: "Contraseña incorrecta" });
+}
     await db.deleteAuthor(req.params.id);
     res.redirect("/");
   } catch (err) {
@@ -343,9 +343,9 @@ exports.authorsDeletePost = async (req, res) => {
 exports.categoriesDeletePost = async (req, res) => {
    try {
     const { password } = req.body;
-    if (password !== process.env.ADMIN_PASSWORD) {
-      return res.status(403).send("Contraseña incorrecta");
-    }
+   if (password !== process.env.ADMIN_PASSWORD) {
+  return res.status(403).json({ error: "Contraseña incorrecta" });
+}
   await db.deleteCategory(req.params.id);
   res.redirect("/");
     } catch (err) {
@@ -358,8 +358,8 @@ exports.publishersDeletePost = async (req, res) => {
    try {
     const { password } = req.body;
     if (password !== process.env.ADMIN_PASSWORD) {
-      return res.status(403).send("Contraseña incorrecta");
-    }
+  return res.status(403).json({ error: "Contraseña incorrecta" });
+}
   await db.deletePublisher(req.params.id);
   res.redirect("/");
     } catch (err) {
